@@ -12,7 +12,8 @@ pipeline {
     stages {
         stage('Git Checkout') {
             steps {
-                git branch: 'main', changelog: false, credentialsId: '15fb69c3-3460-4d51-bd07-2b0545fa5151', poll: false, url: 'https://github.com/jaiswaladi246/Shopping-Cart.git'
+                git branch: 'main', changelog: false, credentialsId: 'Your credentialsId', poll: false, url: 'https://github.com/asimsk757/Ekart.git'
+                // credentialsId you can Generate through Pipeline Syntax
             }
         }
         
@@ -32,9 +33,9 @@ pipeline {
         stage('Sonarqube') {
             steps {
                 withSonarQubeEnv('sonar-server'){
-                   sh ''' $SCANNER_HOME/bin/sonar-scanner -Dsonar.projectName=Shopping-Cart \
+                   sh ''' $SCANNER_HOME/bin/sonar-scanner -Dsonar.url='your Sonarqube url' -Dsonar.log='your sonarqube Token' -Dsonar.projectName=Ekart \
                    -Dsonar.java.binaries=. \
-                   -Dsonar.projectKey=Shopping-Cart '''
+                   -Dsonar.projectKey=Ekart '''
                }
             }
         }
@@ -48,11 +49,11 @@ pipeline {
         stage('Docker Build & Push') {
             steps {
                 script{
-                    withDockerRegistry(credentialsId: '2fe19d8a-3d12-4b82-ba20-9d22e6bf1672', toolName: 'docker') {
+                    withDockerRegistry(credentialsId: 'your docker cred', toolName: 'docker') {
                         
                         sh "docker build -t shopping-cart -f docker/Dockerfile ."
-                        sh "docker tag  shopping-cart adijaiswal/shopping-cart:latest"
-                        sh "docker push adijaiswal/shopping-cart:latest"
+                        sh "docker tag  shopping-cart asimsk757/shopping:latest"
+                        sh "docker push asimsk757/shopping:latest"
                     }
                 }
             }
